@@ -1,4 +1,5 @@
 "use client";
+import EditUserModal, { MessageModal } from "@/app/form-comps/editUserModal";
 import Businessstat from "@/app/ui-comps/businessStat";
 import Proposals from "@/app/ui-comps/proposals";
 import Image from "next/image";
@@ -10,6 +11,11 @@ import { MdBusinessCenter } from "react-icons/md";
 
 export default function page() {
   const [userDetails, setUserDetails] = useState<any[]>([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [message, setMessage] = useState<string>(""); // Message content
+  const [messageType, setMessageType] = useState<"error" | "success">("error"); // Error or Success type
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
+
   useEffect(() => {
     // Retrieve the stored item from sessionStorage
     const storedData = sessionStorage.getItem("clickedUserDetails");
@@ -24,6 +30,53 @@ export default function page() {
       setUserDetails(Array.isArray(parsedData) ? parsedData : [parsedData]); // Store the user details or list in the state
     }
   }, []);
+
+  const updateUserInJsonBin = async (updatedUser: any) => {
+    try {
+      const res = await fetch(
+        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3/latest",
+        {
+          headers: {
+            "X-Master-Key":
+              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
+          },
+        }
+      );
+
+      const data = await res.json();
+      const updatedUsers = data.record.map((user: any) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+
+      const updateRes = await fetch(
+        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key":
+              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
+          },
+          body: JSON.stringify(updatedUsers),
+        }
+      );
+
+      if (!updateRes.ok) throw new Error("Failed to update user");
+      // Success Message
+      setMessage("User updated successfully!");
+      setMessageType("success");
+      setIsMessageModalOpen(true);
+      setUserDetails([updatedUser]);
+    } catch (error) {
+      setMessage("Error updating user. Please try again.");
+      setMessageType("error");
+      setIsMessageModalOpen(true);
+    }
+  };
+
+  const handleSaveUser = (updatedUser: any) => {
+    updateUserInJsonBin(updatedUser);
+  };
 
   if (userDetails.length === 0) return <p>Checking For data</p>;
 
@@ -59,7 +112,10 @@ export default function page() {
         </div>
 
         <div className="flex gap-5">
-          <button className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
+          <button
+            className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
+            onClick={() => setShowEditModal(true)}
+          >
             Edit
           </button>
           <button className="px-5 py-1 bg-[--primaryRed] rounded-[8px] text-white">
@@ -82,6 +138,22 @@ export default function page() {
               key={user.id}
               className="border-[1px] border-[--greyText] grid grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
             >
+              {/* Modal */}
+              {showEditModal && (
+                <EditUserModal
+                  user={user}
+                  onClose={() => setShowEditModal(false)}
+                  onSave={handleSaveUser}
+                />
+              )}
+
+              {isMessageModalOpen && (
+                <MessageModal
+                  message={message}
+                  type={messageType}
+                  onClose={() => setIsMessageModalOpen(false)} // Close the modal onClose
+                />
+              )}
               <div>
                 <small className="text-[12px] text-[--greyText]">
                   First Name

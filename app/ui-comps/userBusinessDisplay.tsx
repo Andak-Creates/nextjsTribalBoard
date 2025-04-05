@@ -2,14 +2,21 @@
 import ProgressCircle from "@/app/ui-comps/progressCircle";
 import Proposals from "@/app/ui-comps/proposals";
 import clsx from "clsx";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaNairaSign } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
 import { MdBusinessCenter } from "react-icons/md";
 import { RiFundsFill } from "react-icons/ri";
+import EditBusinessModal from "../form-comps/editBusinessModal";
+import { MessageModal } from "../form-comps/editUserModal";
 
 export default function UserBusisnessDispaly() {
   const [userDetails, setUserDetails] = useState<any[]>([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [message, setMessage] = useState<string>(""); // Message content
+  const [messageType, setMessageType] = useState<"error" | "success">("error"); // Error or Success type
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("clickedUserDetails");
@@ -21,7 +28,54 @@ export default function UserBusisnessDispaly() {
     }
   }, []);
 
+  const updateBusinessDetails = async (updatedUser: any) => {
+    try {
+      const res = await fetch(
+        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3/latest",
+        {
+          headers: {
+            "X-Master-Key":
+              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
+          },
+        }
+      );
+
+      const data = await res.json();
+      const updatedUsers = data.record.map((user: any) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+
+      const updateRes = await fetch(
+        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key":
+              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
+          },
+          body: JSON.stringify(updatedUsers),
+        }
+      );
+
+      if (!updateRes.ok) throw new Error("Failed to update user");
+      // Success Message
+      setMessage("User updated successfully!");
+      setMessageType("success");
+      setIsMessageModalOpen(true);
+      setUserDetails([updatedUser]);
+    } catch (error) {
+      setMessage("Error updating user. Please try again.");
+      setMessageType("error");
+      setIsMessageModalOpen(true);
+    }
+  };
+
   if (userDetails.length === 0) return <p>Checking for Data</p>;
+
+  const handleEditBusiness = (user: any) => {
+    setShowEditModal(true); // Show the modal for editing business details
+  };
 
   return (
     <>
@@ -59,7 +113,10 @@ export default function UserBusisnessDispaly() {
               </div>
 
               <div>
-                <button className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
+                <button
+                  className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
+                  onClick={() => handleEditBusiness(user)}
+                >
                   Edit
                 </button>
               </div>
@@ -68,6 +125,23 @@ export default function UserBusisnessDispaly() {
             <p className="text-[12px] text-[--greyText] w-[80%] my-[20px]">
               {user.businessDetails.companyDescription}
             </p>
+
+            {/* Modal for editing business details */}
+            {showEditModal && (
+              <EditBusinessModal
+                user={user}
+                onClose={() => setShowEditModal(false)}
+                onSave={updateBusinessDetails}
+              />
+            )}
+
+            {isMessageModalOpen && (
+              <MessageModal
+                message={message}
+                type={messageType}
+                onClose={() => setIsMessageModalOpen(false)} // Close the modal onClose
+              />
+            )}
 
             {/* Business OverView */}
             <div>
@@ -181,7 +255,13 @@ export default function UserBusisnessDispaly() {
 
                 <div className="flex h-fit gap-5">
                   <button className=" px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
-                    View Fundability Details
+                    <Link
+                      href={
+                        "/users/user-details/business-details/fundability-details"
+                      }
+                    >
+                      View Fundability Details
+                    </Link>
                   </button>
                   <button className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
                     Update Score

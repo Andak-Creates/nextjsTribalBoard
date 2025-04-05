@@ -7,6 +7,7 @@ import { GiCancel } from "react-icons/gi";
 import { FaCheckCircle } from "react-icons/fa";
 import { RiFundsFill } from "react-icons/ri";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface BusinessDetails {
   name: string;
@@ -96,6 +97,8 @@ export default function FundabilityTable({
     }
   };
 
+  const router = useRouter();
+
   if (loading) return <p className="text-center">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
@@ -108,59 +111,62 @@ export default function FundabilityTable({
         Fundability Tests
       </h2>
 
-      {/* Table Header */}
       <div className="border-[1px] border-[--borderColor] rounded-[8px] overflow-hidden">
-        <div className="grid grid-cols-7 bg-gray-200 text-[10px] p-2 font-bold border-b border-gray-300 ">
-          <div className="p-2">Name</div>
-          <div className="p-2">Business Name</div>
-          <div className="p-2">Business Type</div>
-          <div className="p-2">Email</div>
-          <div className="p-2">Docs</div>
-          <div className="p-2">Fundability Score</div>
-          <div className="p-2">Action</div>
-        </div>
-
-        {/* Table Content */}
-        {users
-          .slice(0, sliceValue) // Use the prop here
-          .map((user) => (
-            <Link href={`${linkValue}`} key={user.id}>
-              <div
-                className="grid grid-cols-7 border border-gray-300 text-[12px] hover:bg-gray-100"
-                onClick={() => storeUserDetails(user)}
+        <table className="w-full text-[12px] text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-200 text-[10px] font-bold border-b border-gray-300">
+              <th className="p-2">Name</th>
+              <th className="p-2">Business Name</th>
+              <th className="p-2">Business Type</th>
+              <th className="p-2">Email</th>
+              <th className="p-2">Docs</th>
+              <th className="p-2">Fundability Score</th>
+              <th className="p-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.slice(0, sliceValue).map((user) => (
+              <tr
+                key={user.id}
+                className="hover:bg-gray-100 border-b border-gray-300 cursor-pointer"
+                onClick={() => {
+                  storeUserDetails(user);
+                  router.push(linkValue || "/");
+                }}
               >
-                <div className="p-2 overflow-hidden flex-nowrap">
+                <td className="p-2 overflow-hidden whitespace-nowrap">
                   {user.firstName} {user.lastName}
-                </div>
-
-                <div className="p-2 overflow-hidden flex-nowrap">
+                </td>
+                <td className="p-2 overflow-hidden whitespace-nowrap">
                   {user.hasBusiness ? user.businessDetails?.name : "N/A"}
-                </div>
-                <div className="p-2 overflow-hidden">
+                </td>
+                <td className="p-2 overflow-hidden">
                   {user.hasBusiness ? user.businessDetails?.type : "N/A"}
-                </div>
-                <div className="p-2 overflow-hidden">{user.email}</div>
-
-                <div className="p-2 overflow-hidden">Docs</div>
-                <div className="p-2 overflow-hidden">
+                </td>
+                <td className="p-2 overflow-hidden">{user.email}</td>
+                <td className="p-2 overflow-hidden">Docs</td>
+                <td className="p-2 overflow-hidden">
                   <ProgressCircle
                     value={user.fundabilityScore}
                     size={25}
                     strokeWidth={4}
                     color="#41b27c"
-                  />{" "}
-                </div>
-                <div className="p-2 overflow-hidden flex items-center gap-2 text-[15px]">
-                  <span className="text-[--primaryGreen] cursor-pointer">
-                    <FaCheckCircle />
-                  </span>
-                  <span className="text-red-600 cursor-pointer">
-                    <GiCancel />
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
+                  />
+                </td>
+                <td className="p-2 overflow-hidden">
+                  <div className="flex items-center gap-2 text-[15px]">
+                    <span className="text-[--primaryGreen]">
+                      <FaCheckCircle />
+                    </span>
+                    <span className="text-red-600">
+                      <GiCancel />
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
