@@ -11,12 +11,17 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --greyText: #526077;
+    --primaryPurple: #6366f1;
+    --primaryGreen: #41b27c;
+    --primaryRed: #f43f5e;
+    --borderColor: #d1d5db;
+    --rose: #f43f5e;
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
