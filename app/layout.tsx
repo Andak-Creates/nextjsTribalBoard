@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import SideNav from "./ui-comps/SideNav";
 import TopBar from "./ui-comps/topBar";
+import Loading from "./ui-comps/Loading";
+import LayoutWrapper from "./ui-comps/layoutWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,9 +35,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SideNav />
-
-        <TopBar />
-        <div className="flex-1 ml-64 p-4">{children}</div>
+        <div className="flex-1 ml-64 p-4">
+          <TopBar />
+          <LayoutWrapper>{children}</LayoutWrapper>
+        </div>
       </body>
     </html>
   );
