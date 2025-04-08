@@ -4,8 +4,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
+interface UserDetails {
+  firstName: string;
+  lastName: string;
+  // Add other relevant fields here
+}
+
 export default function Page() {
-  const [userDetails, setUserDetails] = useState<any[]>([]);
+  const [userDetails, setUserDetails] = useState<UserDetails[]>([]);
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("clickedUserDetails");
