@@ -9,7 +9,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdBusinessCenter } from "react-icons/md";
 
-export default function page() {
+export default function Page() {
   const [userDetails, setUserDetails] = useState<any[]>([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [message, setMessage] = useState<string>(""); // Message content
@@ -136,7 +136,7 @@ export default function page() {
           {userDetails.map((user: any) => (
             <div
               key={user.id}
-              className="border-[1px] border-[--greyText] grid grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
+              className="border-[1px] border-[--borderColor] grid grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
             >
               {/* Modal */}
               {showEditModal && (

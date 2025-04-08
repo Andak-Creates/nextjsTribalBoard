@@ -2,7 +2,7 @@ import UserBusisnessDispaly from "@/app/ui-comps/userBusinessDisplay";
 import Link from "next/link";
 import { IoIosArrowForward } from "react-icons/io";
 
-export default function page() {
+export default function Page() {
   return (
     <div className="p-5">
       <h2 className="flex  mb-4 items-center gap-3 ">

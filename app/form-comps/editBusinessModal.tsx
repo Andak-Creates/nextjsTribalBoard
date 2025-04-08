@@ -43,20 +43,55 @@ const EditBusinessModal: React.FC<EditBusinessModalProps> = ({
   };
 
   const handleSubmit = () => {
+    const updatedFields: any = {};
+
+    if (formData.businessName !== user.businessDetails.name) {
+      updatedFields.businessDetails = {
+        ...updatedFields.businessDetails,
+        name: formData.businessName,
+      };
+    }
+
+    if (formData.industry !== user.businessDetails.industry) {
+      updatedFields.businessDetails = {
+        ...updatedFields.businessDetails,
+        industry: formData.industry,
+      };
+    }
+
+    if (formData.established !== user.dateJoined) {
+      updatedFields.dateJoined = formData.established;
+    }
+
+    if (formData.ownerType !== user.businessDetails.ownershipType) {
+      updatedFields.businessDetails = {
+        ...updatedFields.businessDetails,
+        ownershipType: formData.ownerType,
+      };
+    }
+
+    if (formData.type !== user.businessDetails.type) {
+      updatedFields.businessDetails = {
+        ...updatedFields.businessDetails,
+        type: formData.type,
+      };
+    }
+
+    if (formData.location !== user.location) {
+      updatedFields.location = formData.location;
+    }
+
     const updatedUser = {
       ...user,
+      ...updatedFields,
       businessDetails: {
-        ...user.businessDetils,
-        name: formData.businessName,
-        industry: formData.industry,
-        established: formData.established,
-        ownershipType: formData.ownerType,
-        businessType: formData.type,
+        ...user.businessDetails,
+        ...updatedFields.businessDetails,
       },
-      location: formData.location,
     };
-    onSave(updatedUser); //Calling the save function with the value of updated users
-    onClose(); //closing the modal after saving new values
+
+    onSave(updatedUser);
+    onClose();
   };
 
   return (
@@ -144,12 +179,12 @@ const EditBusinessModal: React.FC<EditBusinessModalProps> = ({
 
           <div className="space-y-2">
             <label htmlFor="businessType" className="text-sm">
-              Ownership Type
+              Business Type
             </label>
             <select
               id="businessType"
-              name="businessType"
-              value={formData.ownerType}
+              name="type"
+              value={formData.type}
               onChange={handleChange}
               className="w-full border p-2 rounded"
             >

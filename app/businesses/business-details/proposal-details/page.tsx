@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
-export default function page() {
+export default function Page() {
   const [userDetails, setUserDetails] = useState<any[]>([]);
 
   useEffect(() => {

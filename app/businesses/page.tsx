@@ -1,7 +1,7 @@
 import { MdBusinessCenter } from "react-icons/md";
 import BusinessTable from "../ui-comps/businessTable";
 
-export default function page() {
+export default function Page() {
   return (
     <div>
       <h2 className="flex font-bold mb-4 items-center gap-3">

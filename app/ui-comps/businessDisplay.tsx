@@ -10,6 +10,7 @@ import { MdBusinessCenter } from "react-icons/md";
 import { RiFundsFill } from "react-icons/ri";
 import EditBusinessModal from "@/app/form-comps/editBusinessModal";
 import { MessageModal } from "../form-comps/editUserModal";
+import EditFundabilityModal from "../form-comps/editFundability";
 
 export default function BusisnessDispaly() {
   const [userDetails, setUserDetails] = useState<any[]>([]);
@@ -17,6 +18,7 @@ export default function BusisnessDispaly() {
   const [message, setMessage] = useState<string>(""); // Message content
   const [messageType, setMessageType] = useState<"error" | "success">("error"); // Error or Success type
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
+  const [showEditFundability, setShowEditFundability] = useState(false);
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("clickedUserDetails");
@@ -68,6 +70,63 @@ export default function BusisnessDispaly() {
       setMessage("Error updating user. Please try again.");
       setMessageType("error");
       setIsMessageModalOpen(true);
+    }
+  };
+
+  const updateFundabilityInJsonBin = async (updatedUser: any) => {
+    try {
+      const res = await fetch(
+        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
+        {
+          headers: {
+            "X-Master-Key":
+              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
+          },
+        }
+      );
+
+      const data = await res.json();
+      const updatedUsers = data.record.map((user: any) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+
+      const updateRes = await fetch(
+        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key":
+              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
+          },
+          body: JSON.stringify(updatedUsers),
+        }
+      );
+
+      if (!updateRes.ok) throw new Error("Failed to update");
+
+      setMessage("Fundability updated successfully!");
+      setMessageType("success");
+      setIsMessageModalOpen(true);
+      setUserDetails([updatedUser]);
+    } catch (error) {
+      setMessage(`Error updating fundability: ${error}`);
+      setMessageType("error");
+      setIsMessageModalOpen(true);
+    }
+  };
+
+  const handleSaveFundability = (updatedUser: any) => {
+    const currentUser = userDetails.find((user) => user.id === updatedUser.id);
+
+    if (currentUser) {
+      // Merge the updated fields with the existing user data
+      const updatedUserData = {
+        ...currentUser, // Keep the existing fields intact
+        fundabilityScore: updatedUser.fundabilityScore, // Update only the fundabilityScore
+      };
+
+      updateFundabilityInJsonBin(updatedUserData);
     }
   };
 
@@ -125,6 +184,14 @@ export default function BusisnessDispaly() {
             <p className="text-[12px] text-[--greyText] w-[80%] my-[20px]">
               {user.businessDetails.companyDescription}
             </p>
+
+            {showEditFundability && (
+              <EditFundabilityModal
+                user={user}
+                onClose={() => setShowEditFundability(false)}
+                onSave={handleSaveFundability}
+              />
+            )}
 
             {/* Modal for editing business details */}
             {showEditModal && (
@@ -261,7 +328,10 @@ export default function BusisnessDispaly() {
                       View Fundability Details
                     </Link>
                   </button>
-                  <button className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
+                  <button
+                    className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
+                    onClick={() => setShowEditFundability(true)}
+                  >
                     Update Score
                   </button>
                 </div>

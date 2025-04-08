@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Loading from "./Loading";
-import SideNav from "./SideNav";
-import TopBar from "./topBar";
 
 export default function LayoutWrapper({
   children,

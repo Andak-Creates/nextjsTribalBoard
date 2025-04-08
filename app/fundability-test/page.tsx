@@ -1,6 +1,6 @@
 import FundabilityTable from "../ui-comps/fundability-table";
 
-export default function page() {
+export default function Page() {
   return (
     <div className="p-0">
       <FundabilityTable

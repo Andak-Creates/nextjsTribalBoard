@@ -62,6 +62,8 @@ export default function FetchingComp() {
     fetchUsers();
   }, []);
 
+  console.log(`${loading} and ${error}`);
+
   return (
     <div className="flex pl-2 flex-wrap justify-between">
       <Overview data={users} type={"users"} />

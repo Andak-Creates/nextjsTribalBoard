@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Overview from "./overview";
+
 import ProgressCircle from "./progressCircle";
 import { GiCancel } from "react-icons/gi";
 import { FaCheckCircle } from "react-icons/fa";
 import { RiFundsFill } from "react-icons/ri";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface BusinessDetails {
@@ -49,6 +48,8 @@ export default function FundabilityTable({
   const [investors, setInvestors] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  console.log(`${businesses}, ${investors}`);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -128,7 +129,7 @@ export default function FundabilityTable({
             {users.slice(0, sliceValue).map((user) => (
               <tr
                 key={user.id}
-                className="hover:bg-gray-100 border-b border-gray-300 cursor-pointer"
+                className="hover:bg-gray-100 border-b items-center border-gray-300 cursor-pointer"
                 onClick={() => {
                   storeUserDetails(user);
                   router.push(linkValue || "/");
@@ -144,7 +145,7 @@ export default function FundabilityTable({
                   {user.hasBusiness ? user.businessDetails?.type : "N/A"}
                 </td>
                 <td className="p-2 overflow-hidden">{user.email}</td>
-                <td className="p-2 overflow-hidden">Docs</td>
+                <td className="p-2 overflow-hidden">{user.documents}</td>
                 <td className="p-2 overflow-hidden">
                   <ProgressCircle
                     value={user.fundabilityScore}

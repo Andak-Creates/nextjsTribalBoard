@@ -3,14 +3,24 @@
 import { useEffect, useState } from "react";
 import ProgressCircle from "./progressCircle";
 import { RiFundsFill, RiMoneyDollarCircleFill } from "react-icons/ri";
-import clsx from "clsx";
 import { MdBusinessCenter } from "react-icons/md";
 import { FaNairaSign } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
 import DocumentComp from "./documentComp";
+import { MessageModal } from "../form-comps/editUserModal";
+import EditFundabilityModal from "../form-comps/editFundability";
+import Link from "next/link";
 
-export default function FundabilityDisplay() {
+interface linkProp {
+  linkValue?: string;
+}
+
+export default function FundabilityDisplay({ linkValue }: linkProp) {
   const [userDetails, setUserDetails] = useState<any[]>([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [message, setMessage] = useState<string>("");
+  const [messageType, setMessageType] = useState<"error" | "success">("error");
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("clickedUserDetails");
@@ -21,6 +31,63 @@ export default function FundabilityDisplay() {
       setUserDetails(Array.isArray(parsedData) ? parsedData : [parsedData]);
     }
   }, []);
+
+  const updateFundabilityInJsonBin = async (updatedUser: any) => {
+    try {
+      const res = await fetch(
+        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
+        {
+          headers: {
+            "X-Master-Key":
+              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
+          },
+        }
+      );
+
+      const data = await res.json();
+      const updatedUsers = data.record.map((user: any) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+
+      const updateRes = await fetch(
+        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key":
+              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
+          },
+          body: JSON.stringify(updatedUsers),
+        }
+      );
+
+      if (!updateRes.ok) throw new Error("Failed to update");
+
+      setMessage("Fundability updated successfully!");
+      setMessageType("success");
+      setIsMessageModalOpen(true);
+      setUserDetails([updatedUser]);
+    } catch (error) {
+      setMessage(`Error updating fundability: ${error}`);
+      setMessageType("error");
+      setIsMessageModalOpen(true);
+    }
+  };
+
+  const handleSaveFundability = (updatedUser: any) => {
+    const currentUser = userDetails.find((user) => user.id === updatedUser.id);
+
+    if (currentUser) {
+      // Merge the updated fields with the existing user data
+      const updatedUserData = {
+        ...currentUser, // Keep the existing fields intact
+        fundabilityScore: updatedUser.fundabilityScore, // Update only the fundabilityScore
+      };
+
+      updateFundabilityInJsonBin(updatedUserData);
+    }
+  };
 
   if (userDetails.length === 0) return <p>Checking for Data</p>;
 
@@ -48,7 +115,10 @@ export default function FundabilityDisplay() {
               </div>
 
               <div className="flex h-fit ">
-                <button className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
+                <button
+                  className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
+                  onClick={() => setShowEditModal(true)}
+                >
                   Update Score
                 </button>
               </div>
@@ -63,6 +133,22 @@ export default function FundabilityDisplay() {
               </span>
               Business Overview
             </h2>
+
+            {showEditModal && (
+              <EditFundabilityModal
+                user={user}
+                onClose={() => setShowEditModal(false)}
+                onSave={handleSaveFundability}
+              />
+            )}
+
+            {isMessageModalOpen && (
+              <MessageModal
+                message={message}
+                type={messageType}
+                onClose={() => setIsMessageModalOpen(false)}
+              />
+            )}
             {userDetails.map((user: any) => (
               <div
                 key={user.id}
@@ -73,7 +159,7 @@ export default function FundabilityDisplay() {
                     Business Name
                   </small>
                   <p className="font-bold text-[14px] text-[--primaryGreen]">
-                    {user.businessDetails.name}
+                    {user.businessDetails?.name}
                   </p>
                 </div>
 
@@ -103,7 +189,7 @@ export default function FundabilityDisplay() {
                     Ownership Type
                   </small>
                   <p className="font-bold text-[14px]">
-                    {user.businessDetails.ownershipType}
+                    {user.businessDetails?.ownershipType}
                   </p>
                 </div>
 
@@ -119,7 +205,7 @@ export default function FundabilityDisplay() {
                     Industry
                   </small>
                   <p className="font-bold text-[14px]">
-                    {user.businessDetails.industry}
+                    {user.businessDetails?.industry}
                   </p>
                 </div>
 
@@ -164,7 +250,7 @@ export default function FundabilityDisplay() {
                     Average Monthly Salary
                   </small>
                   <p className=" text-[14px] flex items-center gap-1">
-                    <FaNairaSign /> {user.businessDetails.proposalAmount}
+                    <FaNairaSign /> {user.businessDetails?.proposalAmount}
                   </p>
                 </div>
 
@@ -173,7 +259,7 @@ export default function FundabilityDisplay() {
                     Last Reported Yearly Sales
                   </small>
                   <p className=" text-[14px] flex items-center gap-1">
-                    <FaNairaSign /> {user.businessDetails.proposalAmount}
+                    <FaNairaSign /> {user.businessDetails?.proposalAmount}
                   </p>
                 </div>
 
@@ -189,7 +275,7 @@ export default function FundabilityDisplay() {
                     Total Asset Valuation
                   </small>
                   <p className=" text-[14px]">
-                    {user.businessDetails.proposalAmount}
+                    {user.businessDetails?.proposalAmount}
                   </p>
                 </div>
 
@@ -198,7 +284,7 @@ export default function FundabilityDisplay() {
                     Tentative Business Selling Price
                   </small>
                   <p className=" text-[14px]">
-                    {user.businessDetails.proposalAmount}
+                    {user.businessDetails?.proposalAmount}
                   </p>
                 </div>
 
@@ -220,11 +306,16 @@ export default function FundabilityDisplay() {
           <span className="text-[--greyText]">
             <IoDocumentText />{" "}
           </span>
-          Business Overview
+          Business Documents
         </h2>
         <div className="grid grid-cols-3">
-          <DocumentComp />
-          <DocumentComp />
+          <Link href={`${linkValue}`}>
+            <DocumentComp />
+          </Link>
+
+          <Link href={`${linkValue}`}>
+            <DocumentComp />
+          </Link>
         </div>
       </div>
     </div>
