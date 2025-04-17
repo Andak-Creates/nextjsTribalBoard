@@ -27,7 +27,7 @@ export default function Page() {
 
   return (
     <div className="p-5">
-      <h2 className="flex  mb-4 items-center gap-3 ">
+      <h2 className="linkCrumbs">
         <Link href="/businesses">Businesses</Link>
         <span className="text-[25px]">
           <IoIosArrowForward />

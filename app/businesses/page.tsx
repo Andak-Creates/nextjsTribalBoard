@@ -4,7 +4,7 @@ import BusinessTable from "../ui-comps/businessTable";
 export default function Page() {
   return (
     <div>
-      <h2 className="flex font-bold mb-4 items-center gap-3">
+      <h2 className="linkCrumbs">
         <span className="text-[--greyText]">
           <MdBusinessCenter />
         </span>{" "}

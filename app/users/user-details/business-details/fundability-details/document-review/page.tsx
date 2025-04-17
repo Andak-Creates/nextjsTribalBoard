@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <div className="p-5">
       <div>
-        <h2 className="flex  mb-4 items-center gap-3 ">
+        <h1 className="linkCrumbs">
           <Link href="/users">User</Link>
           <span className="text-[25px]">
             <IoIosArrowForward />
@@ -28,7 +28,7 @@ export default function Page() {
             <IoIosArrowForward />
           </span>{" "}
           <span className="text-[--primaryGreen]">Document Preview</span>
-        </h2>
+        </h1>
       </div>
       <h1 className="text-[30px] mt-[10px]">Certificate of Incorporation</h1>
 

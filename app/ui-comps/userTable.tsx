@@ -58,8 +58,8 @@ export default function UserTable({ sliceValue = 10 }: UserTableProps) {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="border-[1px] border-[--borderColor] rounded-[8px] overflow-hidden">
-      <table className="w-full table-auto">
+    <div className="table-wrapper">
+      <table className="tableElement">
         {/* Table Header */}
         <thead className="bg-gray-200 text-[10px] font-bold border-b border-gray-300">
           <tr className="grid grid-cols-7 p-2">

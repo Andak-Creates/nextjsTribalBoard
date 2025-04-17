@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ProgressCircle from "./progressCircle";
 import clsx from "clsx";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface BusinessProps {
   sliceValue?: number;
@@ -59,65 +60,73 @@ export default function Businessstat({ sliceValue = 10 }: BusinessProps) {
 
   const filteredUsers = users.filter((user) => user.hasBusiness);
 
+  const router = useRouter();
+
   return (
-    <div className="border-[1px] border-[--borderColor] rounded-[8px] overflow-hidden">
-      {/* Table Header */}
-      <div className="grid grid-cols-7 bg-gray-200 text-[10px] p-2 font-bold border-b border-gray-300">
-        <div className="p-2">Business Name</div>
-        <div className="p-2">Type</div>
-        <div className="p-2">Industry</div>
-        <div className="p-2">Email</div>
-        <div className="p-2">Documents</div>
-        <div className="p-2">Fundability Score</div>
-        <div className="p-2">Status</div>
-      </div>
+    <div className="table-wrapper">
+      <table className="tableElement">
+        <thead>
+          <tr className="bg-gray-200 text-[10px] font-bold border-b border-gray-300">
+            <th className="p-2">Business Name</th>
+            <th className="p-2">Type</th>
+            <th className="p-2">Industry</th>
+            <th className="p-2">Email</th>
+            <th className="p-2">Documents</th>
+            <th className="p-2">Fundability Score</th>
+            <th className="p-2">Status</th>
+          </tr>
+        </thead>
 
-      {/* Table Content */}
-      {filteredUsers.slice(0, sliceValue).map((user) => (
-        <Link href="/users/user-details/business-details" key={user.id}>
-          <div
-            className="grid grid-cols-7 text-[12px] border border-gray-300 hover:bg-gray-100"
-            onClick={() => storeUserDetails(user)}
-          >
-            <div className="p-2  overflow-hidden flex-nowrap">
-              {user.businessDetails.name}
-            </div>
-
-            <div className="p-2 overflow-hidden flex-nowrap">
-              {user.businessDetails.type}
-            </div>
-            <div className="p-2 overflow-hidden">
-              {user.businessDetails.industry}
-            </div>
-            <div className="p-2 overflow-hidden">{user.email}</div>
-            <div className="p-2 overflow-hidden">{user.documents}</div>
-            <div className="p-2 overflow-hidden">
-              <ProgressCircle
-                value={user.fundabilityScore}
-                size={25}
-                strokeWidth={4}
-                color="#41b27c"
-              />
-            </div>
-            <div className="p-2 overflow-hidden">
-              <p
-                className={clsx(
-                  `p-2 overflow-hidden h-[20px] w-fit flex items-center rounded-[3px]`,
-                  {
-                    "text-[--rose] bg-red-50": user.status === "Score Too Low",
-                    "text-yellow-500 bg-yellow-50":
-                      user.status === "Awaiting Proposal",
-                    "text-[--primaryGreen] bg-green-50":
-                      user.status === "Funded",
-                  }
-                )}
-              >
-                {user.status}
-              </p>
-            </div>
-          </div>
-        </Link>
-      ))}
+        <tbody>
+          {filteredUsers.slice(0, sliceValue).map((user) => (
+            <tr
+              key={user.id}
+              className="hover:bg-gray-100 border-b border-gray-300 cursor-pointer"
+              onClick={() => {
+                storeUserDetails(user);
+                router.push("/users/user-details/business-details");
+              }}
+            >
+              <td className="p-2 whitespace-nowrap">
+                {user.businessDetails.name}
+              </td>
+              <td className="p-2 whitespace-nowrap">
+                {user.businessDetails.type}
+              </td>
+              <td className="p-2 whitespace-nowrap">
+                {user.businessDetails.industry}
+              </td>
+              <td className="p-2 whitespace-nowrap">{user.email}</td>
+              <td className="p-2 whitespace-nowrap">{user.documents}</td>
+              <td className="p-2 whitespace-nowrap">
+                <ProgressCircle
+                  value={user.fundabilityScore}
+                  size={25}
+                  strokeWidth={4}
+                  color="#41b27c"
+                />
+              </td>
+              <td className="p-2 whitespace-nowrap">
+                <p
+                  className={clsx(
+                    `p-2 h-[20px] w-fit flex items-center rounded-[3px]`,
+                    {
+                      "text-[--rose] bg-red-50":
+                        user.status === "Score Too Low",
+                      "text-yellow-500 bg-yellow-50":
+                        user.status === "Awaiting Proposal",
+                      "text-[--primaryGreen] bg-green-50":
+                        user.status === "Funded",
+                    }
+                  )}
+                >
+                  {user.status}
+                </p>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

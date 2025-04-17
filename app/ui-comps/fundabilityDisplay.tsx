@@ -152,7 +152,7 @@ export default function FundabilityDisplay({ linkValue }: linkProp) {
             {userDetails.map((user: any) => (
               <div
                 key={user.id}
-                className="border-[1px] border-[--borderColor] grid grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
+                className="border-[1px] border-[--borderColor] grid dataTab rounded-[8px] mt-[8px]"
               >
                 <div>
                   <small className="text-[12px] text-[--greyText]">
@@ -244,7 +244,7 @@ export default function FundabilityDisplay({ linkValue }: linkProp) {
                 Valuation Summary
               </p>
 
-              <div className="grid grid-cols-3 pb-6 gap-y-6">
+              <div className="grid dataTab gap-y-6">
                 <div>
                   <small className="text-[12px] text-[--greyText]">
                     Average Monthly Salary
@@ -308,7 +308,7 @@ export default function FundabilityDisplay({ linkValue }: linkProp) {
           </span>
           Business Documents
         </h2>
-        <div className="grid grid-cols-3">
+        <div className="flex flex-wrap gap-3">
           <Link href={`${linkValue}`}>
             <DocumentComp />
           </Link>

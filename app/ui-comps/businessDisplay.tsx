@@ -221,7 +221,7 @@ export default function BusisnessDispaly() {
               {userDetails.map((user: any) => (
                 <div
                   key={user.id}
-                  className="border-[1px] border-[--borderColor] grid grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
+                  className="border-[1px] border-[--borderColor] grid dataTab   rounded-[8px] mt-[8px]"
                 >
                   <div>
                     <small className="text-[12px] text-[--greyText]">
@@ -309,8 +309,8 @@ export default function BusisnessDispaly() {
                 Fundability Score
               </h2>
 
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex flex-col md:flex-row gap-4 items-start justify-start md:items-center md:justify-between">
+                <div className="w-fit">
                   <ProgressCircle
                     value={user.fundabilityScore}
                     inside
@@ -321,7 +321,7 @@ export default function BusisnessDispaly() {
                 </div>
 
                 <div className="flex h-fit gap-5">
-                  <button className=" px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
+                  <button className="px-2 md:px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
                     <Link
                       href={"/businesses/business-details/fundability-detail"}
                     >
@@ -329,7 +329,7 @@ export default function BusisnessDispaly() {
                     </Link>
                   </button>
                   <button
-                    className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
+                    className="px-2 md:px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
                     onClick={() => setShowEditFundability(true)}
                   >
                     Update Score
@@ -353,7 +353,7 @@ export default function BusisnessDispaly() {
                   Valuation Summary
                 </p>
 
-                <div className="grid grid-cols-3 pb-6 border-b border-[borderColor]">
+                <div className="grid dataTab pb-6 border-b border-[borderColor]">
                   <div>
                     <small className="text-[12px] text-[--greyText]">
                       Valuation Range
@@ -385,7 +385,7 @@ export default function BusisnessDispaly() {
                   <p className="text-[14px] text-[--primaryGreen]">
                     Key Valuation Metrics
                   </p>
-                  <div className="grid grid-cols-3  ">
+                  <div className="grid dataTab  ">
                     <div>
                       <small className="text-[12px] text-[--greyText]">
                         Annual Revenue

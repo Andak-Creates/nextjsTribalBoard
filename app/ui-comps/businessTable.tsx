@@ -60,8 +60,8 @@ export default function BusinessTable({ sliceValue = 10 }: BusinessProps) {
   const filteredUsers = users.filter((user) => user.hasBusiness);
 
   return (
-    <div className="border-[1px] border-[--borderColor] rounded-[8px] overflow-hidden">
-      <table className="w-full text-[12px]">
+    <div className="table-wrapper">
+      <table className="tableElement">
         <thead>
           <tr className="grid grid-cols-7 bg-gray-200 text-[10px] p-2 font-bold border-b border-gray-300">
             <th className="p-2 text-left">Business Name</th>

@@ -4,6 +4,7 @@ import "./globals.css";
 import SideNav from "./ui-comps/SideNav";
 import TopBar from "./ui-comps/topBar";
 import LayoutWrapper from "./ui-comps/layoutWrapper";
+import ClientWrapper from "./ui-comps/ClientWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,13 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
-        <SideNav />
-        <TopBar />
-        <div className="flex-1 ml-64 p-4">
-          <LayoutWrapper>{children}</LayoutWrapper>
-        </div>
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );

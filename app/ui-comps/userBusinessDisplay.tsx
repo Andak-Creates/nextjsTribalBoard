@@ -221,7 +221,7 @@ export default function UserBusisnessDispaly() {
               {userDetails.map((user: any) => (
                 <div
                   key={user.id}
-                  className="border-[1px] border-[--borderColor] grid grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
+                  className="border-[1px] border-[--borderColor] grid grid-cols-2 md:grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
                 >
                   <div>
                     <small className="text-[12px] text-[--greyText]">
@@ -309,7 +309,7 @@ export default function UserBusisnessDispaly() {
                 Fundability Score
               </h2>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-start md:items-center gap-8 md:justify-between flex-col md:flex-row">
                 <div>
                   <ProgressCircle
                     value={user.fundabilityScore}
@@ -321,7 +321,7 @@ export default function UserBusisnessDispaly() {
                 </div>
 
                 <div className="flex h-fit gap-5">
-                  <button className=" px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
+                  <button className=" px-3 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
                     <Link
                       href={
                         "/users/user-details/business-details/fundability-details"
@@ -355,7 +355,7 @@ export default function UserBusisnessDispaly() {
                   Valuation Summary
                 </p>
 
-                <div className="grid grid-cols-3 pb-6 border-b border-[borderColor]">
+                <div className="grid grid-cols-2 md:grid-cols-3 pb-6 border-b border-[borderColor]">
                   <div>
                     <small className="text-[12px] text-[--greyText]">
                       Valuation Range
@@ -387,7 +387,7 @@ export default function UserBusisnessDispaly() {
                   <p className="text-[14px] text-[--primaryGreen]">
                     Key Valuation Metrics
                   </p>
-                  <div className="grid grid-cols-3  ">
+                  <div className="grid grid-cols-2 md:grid-cols-3  ">
                     <div>
                       <small className="text-[12px] text-[--greyText]">
                         Annual Revenue

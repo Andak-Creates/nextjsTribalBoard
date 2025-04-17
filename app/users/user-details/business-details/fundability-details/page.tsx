@@ -5,7 +5,7 @@ import { IoIosArrowForward } from "react-icons/io";
 export default function Page() {
   return (
     <div className="p-5">
-      <h2 className="flex  mb-4 items-center gap-3 ">
+      <h1 className="linkCrumbs ">
         <Link href="/users">User</Link>
         <span className="text-[25px]">
           <IoIosArrowForward />
@@ -23,7 +23,7 @@ export default function Page() {
         <span className="text-[--primaryGreen] cursor-pointer">
           Fundability Details
         </span>
-      </h2>
+      </h1>
 
       <div>
         <FundabilityDisplay linkValue="/users/user-details/business-details/fundability-details/document-review" />

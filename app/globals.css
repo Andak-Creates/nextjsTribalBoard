@@ -23,10 +23,29 @@
 body {
   color: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  /* transition: all 300ms ease; */
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer components {
+  .table-wrapper {
+    @apply border border-[--borderColor] rounded-[8px] overflow-x-auto w-full;
+  }
+
+  .tableElement {
+    @apply min-w-[800px] md:w-full text-[12px] text-left border-collapse overflow-x-auto;
+  }
+
+  .linkCrumbs {
+    @apply flex mb-4 items-center gap-3 overflow-x-auto whitespace-nowrap w-full text-sm font-bold;
+  }
+
+  .dataTab {
+    @apply grid-cols-2 md:grid-cols-3 p-4 pr-10 gap-4;
   }
 }

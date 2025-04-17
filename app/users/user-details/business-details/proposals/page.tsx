@@ -21,7 +21,7 @@ export default function Page() {
 
   return (
     <div className="p-5">
-      <h2 className="flex  mb-4 items-center gap-3 ">
+      <h1 className="linkCrumbs">
         <Link href="users">Users</Link>
         <span className="text-[25px]">
           <IoIosArrowForward />
@@ -42,7 +42,7 @@ export default function Page() {
         >
           Proposals
         </Link>
-      </h2>
+      </h1>
 
       <div>
         <ProposalDispaly />

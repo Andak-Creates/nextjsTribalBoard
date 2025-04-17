@@ -25,8 +25,10 @@ export default function LayoutWrapper({
   if (loading) return <Loading text="Loading..." />;
 
   return (
-    <>
-      <div>{children}</div>
-    </>
+    <div>
+      <div className="flex-1 ml-0 m-4 mt-[100px] w-full lg:w-[80%]  px-[15px] lg:mt-[80px]  lg:ml-64 md:p-5">
+        {children}
+      </div>
+    </div>
   );
 }

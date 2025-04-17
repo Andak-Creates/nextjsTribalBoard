@@ -112,8 +112,8 @@ export default function FundabilityTable({
         Fundability Tests
       </h2>
 
-      <div className="border-[1px] border-[--borderColor] rounded-[8px] overflow-hidden">
-        <table className="w-full text-[12px] text-left border-collapse">
+      <div className="table-wrapper">
+        <table className="tableElement">
           <thead>
             <tr className="bg-gray-200 text-[10px] font-bold border-b border-gray-300">
               <th className="p-2">Name</th>

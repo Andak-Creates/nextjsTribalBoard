@@ -66,7 +66,7 @@ export default function ProposalDispaly() {
               {userDetails.map((user: any) => (
                 <div
                   key={user.id}
-                  className="border-[1px] border-[--borderColor] grid grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
+                  className="border-[1px] border-[--borderColor] grid grid-cols-2 md:grid-cols-3 p-4 pr-10 gap-4 rounded-[8px] mt-[8px]"
                 >
                   <div>
                     <small className="text-[12px] text-[--greyText]">

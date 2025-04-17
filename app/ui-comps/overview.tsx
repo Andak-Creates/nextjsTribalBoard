@@ -11,7 +11,7 @@ type OverviewProps = {
 export default function Overview({ data = [], type }: OverviewProps) {
   const safeType = type || "default";
   return (
-    <div className="inline-block items-center space-x-2 w-[300px] border-2 cursor-pointer border-gray-100 px-4 py-4 rounded-[8px] mb-5">
+    <div className="inline-block items-center space-x-2 w-full md:w-[300px] border-2 cursor-pointer border-gray-100 px-4 py-4 rounded-[8px] mb-5 ">
       <div className="flex justify-between text-[15px] ">
         <div>
           {safeType === "users" ? (

@@ -9,7 +9,7 @@ interface LoadingProps {
 const Loading: React.FC<LoadingProps> = ({ text }) => {
   return (
     <motion.div
-      className="fixed inset-0 flex flex-col   items-center justify-center bg-black bg-opacity-70  z-0"
+      className="fixed inset-0 flex flex-col   items-center justify-center bg-black bg-opacity-70  z-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

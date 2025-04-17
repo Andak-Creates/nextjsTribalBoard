@@ -82,15 +82,15 @@ export default function Page() {
 
   return (
     <div className="p-5">
-      <h2 className="flex  mb-4 items-center gap-3 ">
+      <h1 className="linkCrumbs">
         <Link href="/users">Users</Link>
         <span className="text-[25px]">
           <IoIosArrowForward />
         </span>{" "}
         <span className="text-[--primaryGreen]">User Details</span>
-      </h2>
+      </h1>
 
-      <div className="flex mt-[30px] items-center justify-between ">
+      <div className="flex flex-col md:flex-row mt-[30px] items-start md:items-center md:justify-between gap-y-5 mb-10 ">
         <div className="flex gap-5">
           <Image
             src="/images/tribalAvatar.jpeg"
@@ -136,7 +136,7 @@ export default function Page() {
           {userDetails.map((user: any) => (
             <div
               key={user.id}
-              className="border-[1px] border-[--borderColor] grid grid-cols-3 p-4 gap-4 rounded-[8px] mt-[8px]"
+              className="border-[1px] border-[--borderColor] grid grid-cols-2 md:grid-cols-3 p-4 gap-x-[80px] gap-y-6 rounded-[8px] mt-[8px] "
             >
               {/* Modal */}
               {showEditModal && (
