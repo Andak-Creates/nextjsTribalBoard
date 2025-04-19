@@ -54,15 +54,7 @@ export default function FundabilityTable({
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(
-          "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
-          {
-            headers: {
-              "X-Master-Key":
-                "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
-            },
-          }
-        );
+        const response = await fetch("api/users");
 
         if (!response.ok) {
           throw new Error("Failed to fetch data");

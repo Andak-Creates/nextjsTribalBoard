@@ -34,40 +34,34 @@ export default function FundabilityDisplay({ linkValue }: linkProp) {
 
   const updateFundabilityInJsonBin = async (updatedUser: any) => {
     try {
-      const res = await fetch(
-        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
-        {
-          headers: {
-            "X-Master-Key":
-              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
-          },
-        }
-      );
+      const res = await fetch("/api/users");
 
       const data = await res.json();
+      console.log(data);
+
       const updatedUsers = data.record.map((user: any) =>
         user.id === updatedUser.id ? updatedUser : user
       );
 
-      const updateRes = await fetch(
-        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key":
-              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
-          },
-          body: JSON.stringify(updatedUsers),
-        }
-      );
+      const updateRes = await fetch("/api/users", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": process.env.JSONBIN_MASTER_KEY as string,
+        },
+        body: JSON.stringify({ record: updatedUsers }), // Ensure the correct structure for JSONBin
+      });
 
       if (!updateRes.ok) throw new Error("Failed to update");
 
       setMessage("Fundability updated successfully!");
       setMessageType("success");
       setIsMessageModalOpen(true);
-      setUserDetails([updatedUser]);
+      setUserDetails((prevState) =>
+        prevState.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user
+        )
+      );
     } catch (error) {
       setMessage(`Error updating fundability: ${error}`);
       setMessageType("error");
@@ -86,6 +80,7 @@ export default function FundabilityDisplay({ linkValue }: linkProp) {
       };
 
       updateFundabilityInJsonBin(updatedUserData);
+      console.log("Updated User Data:", updatedUserData);
     }
   };
 
