@@ -1,29 +1,14 @@
 "use client";
+import { useBusinessStore } from "@/app/stores/businessStore";
 import ProposalDispaly from "@/app/ui-comps/proposalDisplay";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+
 import { IoIosArrowForward } from "react-icons/io";
 
-interface UserDetails {
-  firstName: string;
-  lastName: string;
-  // Add other relevant fields here
-}
-
 export default function Page() {
-  const [userDetails, setUserDetails] = useState<UserDetails[]>([]);
+  const selectedUser = useBusinessStore((state) => state.selectedUser);
 
-  useEffect(() => {
-    const storedData = sessionStorage.getItem("clickedUserDetails");
-
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-
-      setUserDetails(Array.isArray(parsedData) ? parsedData : [parsedData]);
-    }
-  }, []);
-
-  if (userDetails.length === 0) return <p>Checking for Data</p>;
+  if (!selectedUser) return <p>No Data Found</p>;
 
   return (
     <div className="p-5">

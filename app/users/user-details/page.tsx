@@ -1,72 +1,44 @@
 "use client";
 import EditUserModal, { MessageModal } from "@/app/form-comps/editUserModal";
+import { useUserStore } from "@/app/stores/userStore";
+import { User } from "@/app/types/user";
+
 import Businessstat from "@/app/ui-comps/businessStat";
 import Proposals from "@/app/ui-comps/proposals";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdBusinessCenter } from "react-icons/md";
 
 export default function Page() {
-  const [userDetails, setUserDetails] = useState<any[]>([]);
+  const selectedUser = useUserStore((state) => state.selectedUser);
+  const updateUser = useUserStore((state) => state.updateUser);
   const [showEditModal, setShowEditModal] = useState(false);
   const [message, setMessage] = useState<string>(""); // Message content
   const [messageType, setMessageType] = useState<"error" | "success">("error"); // Error or Success type
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    // Retrieve the stored item from sessionStorage
-    const storedData = sessionStorage.getItem("clickedUserDetails");
-
-    if (storedData) {
-      // Parse the stored JSON to get the original data
-      const parsedData = JSON.parse(storedData);
-
-      // If you have a list of users (array), you would store them like this:
-      // sessionStorage.setItem("userList", JSON.stringify(users));
-
-      setUserDetails(Array.isArray(parsedData) ? parsedData : [parsedData]); // Store the user details or list in the state
-    }
-  }, []);
-
-  const updateUserInJsonBin = async (updatedUser: any) => {
+  const updateUserInFirestore = async (updatedUser: User) => {
     try {
-      const res = await fetch(
-        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3/latest",
-        {
-          headers: {
-            "X-Master-Key":
-              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
-          },
-        }
-      );
+      const res = await fetch(`/api/users/${updatedUser.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedUser),
+      });
 
-      const data = await res.json();
-      const updatedUsers = data.record.map((user: any) =>
-        user.id === updatedUser.id ? updatedUser : user
-      );
+      if (!res.ok) {
+        throw new Error("Failed to update user");
+      }
 
-      const updateRes = await fetch(
-        "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key":
-              "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW",
-          },
-          body: JSON.stringify(updatedUsers),
-        }
-      );
-
-      if (!updateRes.ok) throw new Error("Failed to update user");
+      updateUser(updatedUser); // Update the user in the store
       // Success Message
       setMessage("User updated successfully!");
       setMessageType("success");
       setIsMessageModalOpen(true);
-      setUserDetails([updatedUser]);
     } catch (error) {
       setMessage("Error updating user. Please try again.");
       setMessageType("error");
@@ -74,11 +46,11 @@ export default function Page() {
     }
   };
 
-  const handleSaveUser = (updatedUser: any) => {
-    updateUserInJsonBin(updatedUser);
+  const handleSaveUser = (updatedUser: User) => {
+    updateUserInFirestore(updatedUser);
   };
 
-  if (userDetails.length === 0) return <p>Checking For data</p>;
+  if (selectedUser === null) return <p>sorry no user selected</p>;
 
   return (
     <div className="p-5">
@@ -99,16 +71,15 @@ export default function Page() {
             width={60}
             className="rounded-[50%]"
           />
-          {userDetails.map((user: any) => (
-            <div key={user.id}>
-              <h1 className="flex flex-col text-[25px]">
-                {user.firstName} {user.lastName}
-                <small className="text-[14px] text-[--greyText]">
-                  {user.location}
-                </small>
-              </h1>
-            </div>
-          ))}
+
+          <div>
+            <h1 className="flex flex-col text-[25px]">
+              {selectedUser.firstName} {selectedUser.lastName}
+              <small className="text-[14px] text-[--greyText]">
+                {selectedUser.location}
+              </small>
+            </h1>
+          </div>
         </div>
 
         <div className="flex gap-5">
@@ -133,68 +104,61 @@ export default function Page() {
         </div>
 
         <div>
-          {userDetails.map((user: any) => (
-            <div
-              key={user.id}
-              className="border-[1px] border-[--borderColor] grid grid-cols-2 md:grid-cols-3 p-4 gap-x-[80px] gap-y-6 rounded-[8px] mt-[8px] "
-            >
-              {/* Modal */}
-              {showEditModal && (
-                <EditUserModal
-                  user={user}
-                  onClose={() => setShowEditModal(false)}
-                  onSave={handleSaveUser}
-                />
-              )}
+          <div className="border-[1px] border-[--borderColor] grid grid-cols-2 md:grid-cols-3 p-4 gap-x-[80px] gap-y-6 rounded-[8px] mt-[8px] ">
+            {/* Modal */}
+            {showEditModal && (
+              <EditUserModal
+                user={selectedUser}
+                onClose={() => setShowEditModal(false)}
+                onSave={handleSaveUser}
+              />
+            )}
 
-              {isMessageModalOpen && (
-                <MessageModal
-                  message={message}
-                  type={messageType}
-                  onClose={() => setIsMessageModalOpen(false)} // Close the modal onClose
-                />
-              )}
-              <div>
-                <small className="text-[12px] text-[--greyText]">
-                  First Name
-                </small>
-                <p className="font-bold text-[14px]">{user.firstName}</p>
-              </div>
-
-              <div>
-                <small className="text-[12px] text-[--greyText]">
-                  Last Name
-                </small>
-                <p className="font-bold text-[14px]">{user.lastName}</p>
-              </div>
-
-              <div>
-                <small className="text-[12px] text-[--greyText]">Email</small>
-                <p className="font-bold text-[14px]">{user.email}</p>
-              </div>
-
-              <div>
-                <small className="text-[12px] text-[--greyText]">
-                  Phone Number
-                </small>
-                <p className="font-bold text-[14px]">{user.phoneNumber}</p>
-              </div>
-
-              <div>
-                <small className="text-[12px] text-[--greyText]">
-                  Location
-                </small>
-                <p className="font-bold text-[14px]">{user.location}</p>
-              </div>
-
-              <div>
-                <small className="text-[12px] text-[--greyText]">
-                  Date Joined
-                </small>
-                <p className="font-bold text-[14px]">{user.dateJoined}</p>
-              </div>
+            {isMessageModalOpen && (
+              <MessageModal
+                message={message}
+                type={messageType}
+                onClose={() => setIsMessageModalOpen(false)} // Close the modal onClose
+              />
+            )}
+            <div>
+              <small className="text-[12px] text-[--greyText]">
+                First Name
+              </small>
+              <p className="font-bold text-[14px]">{selectedUser.firstName}</p>
             </div>
-          ))}
+
+            <div>
+              <small className="text-[12px] text-[--greyText]">Last Name</small>
+              <p className="font-bold text-[14px]">{selectedUser.lastName}</p>
+            </div>
+
+            <div>
+              <small className="text-[12px] text-[--greyText]">Email</small>
+              <p className="font-bold text-[14px]">{selectedUser.email}</p>
+            </div>
+
+            <div>
+              <small className="text-[12px] text-[--greyText]">
+                Phone Number
+              </small>
+              <p className="font-bold text-[14px]">
+                {selectedUser.phoneNumber}
+              </p>
+            </div>
+
+            <div>
+              <small className="text-[12px] text-[--greyText]">Location</small>
+              <p className="font-bold text-[14px]">{selectedUser.location}</p>
+            </div>
+
+            <div>
+              <small className="text-[12px] text-[--greyText]">
+                Date Joined
+              </small>
+              <p className="font-bold text-[14px]">{selectedUser.dateJoined}</p>
+            </div>
+          </div>
         </div>
 
         <div className="mt-[40px]">

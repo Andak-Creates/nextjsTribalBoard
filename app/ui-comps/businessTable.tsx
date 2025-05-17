@@ -5,46 +5,20 @@ import { FaCheckCircle } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import ProgressCircle from "./progressCircle";
 import { useRouter } from "next/navigation";
+import { useBusinessStore } from "../stores/businessStore";
 
 interface BusinessProps {
   sliceValue?: number;
 }
 
 export default function BusinessTable({ sliceValue = 10 }: BusinessProps) {
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { users, loading, error, fetchUsers, setSelectedUser } =
+    useBusinessStore();
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("/api/users");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
-        const data = await response.json();
-        setUsers(data.record);
-      } catch (err) {
-        setError("Error fetching users");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
-  }, []);
-
-  const storeUserDetails = (user: any) => {
-    if (user && user.id) {
-      sessionStorage.setItem("clickedUserDetails", JSON.stringify(user));
-    } else {
-      console.log("invalid user Data");
-    }
-  };
+  }, [fetchUsers]);
 
   if (loading) return <p className="text-center">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -72,16 +46,16 @@ export default function BusinessTable({ sliceValue = 10 }: BusinessProps) {
               key={user.id}
               className="grid grid-cols-7 items-center border border-gray-300 hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                storeUserDetails(user);
+                setSelectedUser(user);
                 router.push("/businesses/business-details");
               }}
             >
-              <td className="p-2 overflow-hidden flex-nowrap">
-                {user.businessDetails.name}
+              <td className="p-2 overflow-hidden whitespace-nowrap">
+                {user.businessDetails?.name}
               </td>
 
               <td className="p-2 overflow-hidden flex-nowrap">
-                {user.businessDetails.type}
+                {user.businessDetails?.type}
               </td>
 
               <td className="p-2 overflow-hidden">

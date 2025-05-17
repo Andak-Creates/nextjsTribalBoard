@@ -1,15 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
-
-interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  location: string;
-}
+import { User } from "../types/user";
 
 interface EditUserModalProps {
   user: User;

@@ -1,56 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "../stores/userStore";
 
 interface UserTableProps {
   sliceValue?: number;
 }
 
 export default function UserTable({ sliceValue = 10 }: UserTableProps) {
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { users, loading, error, fetchUsers, setSelectedUser } = useUserStore();
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(
-          "https://api.jsonbin.io/v3/b/67ec02e88a456b79668097d3",
-          {
-            headers: {
-              "X-Master-Key":
-                "$2a$10$v6RehC0t7dKcrEwKi3m5H.16bI8P8MsFWnuvu32.boDlOD5OlUWWW ",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
-        const data = await response.json();
-        setUsers(data.record);
-      } catch (err) {
-        setError("Error fetching users");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
-
-  const storeUserDetails = (user: any) => {
-    // Make sure the user object is valid
-    if (user && user.id) {
-      // Store user details in sessionStorage
-      sessionStorage.setItem("clickedUserDetails", JSON.stringify(user));
-    } else {
-      console.error("Invalid user data");
-    }
-  };
 
   const router = useRouter();
 
@@ -75,49 +39,50 @@ export default function UserTable({ sliceValue = 10 }: UserTableProps) {
 
         {/* Table Content */}
         <tbody>
-          {users.slice(0, sliceValue).map((user: any) => (
-            <tr
-              key={user.id}
-              onClick={() => {
-                storeUserDetails(user);
-                router.push("users/user-details");
-              }}
-              className="grid grid-cols-7 border items-center border-gray-300 text-[12px] hover:bg-gray-100 cursor-pointer"
-            >
-              <td className="p-2 overflow-hidden flex-nowrap">
-                {user.firstName}
-              </td>
-              <td className="p-2 overflow-hidden flex-nowrap">
-                {user.lastName}
-              </td>
-              <td className="p-2 overflow-hidden">{user.email}</td>
-              <td className="p-2 overflow-hidden">
-                {user.hasBusiness ? user.businessDetails?.name : "N/A"}
-              </td>
-              <td className="p-2 overflow-hidden">{user.location}</td>
-              <td className="p-2 overflow-hidden">{user.dateJoined}</td>
-              <td className="p-2 overflow-hidden flex items-center gap-2 text-[18px]">
-                <span
-                  className="text-[--greyText] cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Edit handler here if needed
-                  }}
-                >
-                  <MdModeEdit />
-                </span>
-                <span
-                  className="text-red-600 cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Delete handler here if needed
-                  }}
-                >
-                  <MdDelete />
-                </span>
-              </td>
-            </tr>
-          ))}
+          {Array.isArray(users) &&
+            users.slice(0, sliceValue).map((user: any) => (
+              <tr
+                key={user.id}
+                onClick={() => {
+                  setSelectedUser(user);
+                  router.push("users/user-details");
+                }}
+                className="grid grid-cols-7 border items-center border-gray-300 text-[12px] hover:bg-gray-100 cursor-pointer"
+              >
+                <td className="p-2 overflow-hidden flex-nowrap">
+                  {user.firstName}
+                </td>
+                <td className="p-2 overflow-hidden flex-nowrap">
+                  {user.lastName}
+                </td>
+                <td className="p-2 overflow-hidden">{user.email}</td>
+                <td className="p-2 overflow-hidden">
+                  {user.hasBusiness ? user.businessDetails?.name : "N/A"}
+                </td>
+                <td className="p-2 overflow-hidden">{user.location}</td>
+                <td className="p-2 overflow-hidden">{user.dateJoined}</td>
+                <td className="p-2 overflow-hidden flex items-center gap-2 text-[18px]">
+                  <span
+                    className="text-[--greyText] cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Edit handler here if needed
+                    }}
+                  >
+                    <MdModeEdit />
+                  </span>
+                  <span
+                    className="text-red-600 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Delete handler here if needed
+                    }}
+                  >
+                    <MdDelete />
+                  </span>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
