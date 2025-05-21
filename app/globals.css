@@ -48,4 +48,12 @@ body {
   .dataTab {
     @apply grid-cols-2 md:grid-cols-3 p-4 pr-10 gap-4;
   }
+
+  .buttonHolder {
+    @apply flex h-fit w-[100%] justify-between items-center;
+  }
+
+  .fundabilityButton {
+    @apply px-2 text-[16px] md:px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px];
+  }
 }

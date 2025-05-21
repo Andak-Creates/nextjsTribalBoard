@@ -135,12 +135,20 @@ export default function UserBusisnessDispaly() {
 
             <div>
               <button
-                className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
+                className="hidden md:block px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
                 onClick={() => handleEditBusiness(selectedUser)}
               >
                 Edit
               </button>
             </div>
+          </div>
+          <div>
+            <button
+              className="px-5 mt-[15px] md:hidden py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
+              onClick={() => handleEditBusiness(selectedUser)}
+            >
+              Edit
+            </button>
           </div>
 
           <p className="text-[12px] text-[--greyText] w-[80%] my-[20px]">
@@ -279,8 +287,8 @@ export default function UserBusisnessDispaly() {
                 />
               </div>
 
-              <div className="flex h-fit gap-5">
-                <button className=" px-3 py-1 border-[1.2px] border-[--greyText] rounded-[8px]">
+              <div className="buttonHolder">
+                <button className="fundabilityButton">
                   <Link
                     href={
                       "/users/user-details/business-details/fundability-details"
@@ -290,7 +298,7 @@ export default function UserBusisnessDispaly() {
                   </Link>
                 </button>
                 <button
-                  className="px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px]"
+                  className="fundabilityButton"
                   onClick={() => setShowEditFundability(true)}
                 >
                   Update Score

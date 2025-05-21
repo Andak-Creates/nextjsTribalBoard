@@ -11,14 +11,15 @@ import { MessageModal } from "../form-comps/editUserModal";
 import EditFundabilityModal from "../form-comps/editFundability";
 import Link from "next/link";
 import { FundabilityUpdate, User } from "../types/user";
-import { useBusinessStore } from "../stores/businessStore";
+
+import { useUserStore } from "../stores/userStore";
 
 interface linkProp {
   linkValue?: string;
 }
 
 export default function FundabilityDisplay({ linkValue }: linkProp) {
-  const { selectedUser, updateUser } = useBusinessStore();
+  const { selectedUser, updateUser } = useUserStore();
   const [showEditModal, setShowEditModal] = useState(false);
   const [message, setMessage] = useState<string>("");
   const [messageType, setMessageType] = useState<"error" | "success">("error");
@@ -49,7 +50,7 @@ export default function FundabilityDisplay({ linkValue }: linkProp) {
     }
   };
 
-  if (!selectedUser) return <p>Checking for Data</p>;
+  if (selectedUser === null) return <p>Error collecting user details</p>;
 
   const handleSaveFundability = (updatedFundability: FundabilityUpdate) => {
     if (!selectedUser) return;
