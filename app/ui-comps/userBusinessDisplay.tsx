@@ -342,7 +342,7 @@ export default function UserBusisnessDispaly() {
                   </p>
                 </div>
 
-                <div>
+                <div className="investmentDesc">
                   <small className="text-[12px] text-[--greyText]">
                     Investment Potential
                   </small>

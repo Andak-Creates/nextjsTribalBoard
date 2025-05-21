@@ -56,4 +56,8 @@ body {
   .fundabilityButton {
     @apply px-2 text-[16px] md:px-5 py-1 border-[1.2px] border-[--greyText] rounded-[8px];
   }
+
+  .investmentDesc {
+    @apply w-[300px] md:w-[auto];
+  }
 }
